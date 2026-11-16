@@ -12,7 +12,7 @@ class Pokedex {
     var store = mutableStateListOf<Pokemon>()
     var captured = mutableStateListOf<Int>()
     var isLoaded: Boolean = false
-
+    var pokemonTypes = mutableStateListOf<PokemonType>()
 
     fun loadPokedex() {}
 
@@ -20,6 +20,10 @@ class Pokedex {
         if (id in captured) captured.remove(id)
         else captured.add(id)
     }
+
+    fun byId(id: Int): Pokemon? = store.find { it.id == id }
+    fun getTypeByName(name: String): PokemonType? = pokemonTypes.find { it.name == name }
+
 }
 
 val LocalPokedex = compositionLocalOf<Pokedex> {

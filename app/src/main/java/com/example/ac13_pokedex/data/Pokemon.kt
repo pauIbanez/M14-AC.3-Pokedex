@@ -14,6 +14,14 @@ data class Stats(
     val total: Int get() = hp + attack + defense + specialAttack + specialDefense + speed
 }
 
+
+@Serializable
+data class PokemonType(
+    val id: String,
+    val name: String,
+    val color: String,
+)
+
 @Serializable
 data class Pokemon(
     val id: Int,
