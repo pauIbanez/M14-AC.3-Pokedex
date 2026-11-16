@@ -12,35 +12,36 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Main,
-    onPrimary = Color.White,
-    secondary = Accent,
-    tertiary = Accent2
-)
 
 private val LightColorScheme = lightColorScheme(
-    primary = Main,
+    primary = PokedexRed,
     onPrimary = Color.White,
-    secondary = Accent,
-    tertiary = Accent2
+    secondary = PokeBlue,
+    tertiary = PokeYellow,
+    secondaryContainer = Color(0xFFFFDAD6),
+    onSecondaryContainer = Color(0xFF410006),
+    background = LightBackground,
+    surface = LightBackground,
+    surfaceContainer = Color(0xFFF7ECEB),
+)
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
+private val DarkColorScheme = darkColorScheme(
+    primary = PokedexRedDark,
     onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    secondary = Color(0xFFBAC3FF),
+    tertiary = PokeYellow,
+    secondaryContainer = Color(0xFF73000F),
+    onSecondaryContainer = Color(0xFFFFDAD6),
+    background = DarkBackground,
+    surface = DarkBackground,
+    surfaceContainer = Color(0xFF231E1F),
 )
 
 @Composable
 fun Ac13_pokedexTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

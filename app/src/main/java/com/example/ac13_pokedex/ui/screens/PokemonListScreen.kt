@@ -1,6 +1,7 @@
 package com.example.ac13_pokedex.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -41,10 +42,15 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import com.example.ac13_pokedex.R
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import com.example.ac13_pokedex.ui.components.PokemonSprite
+import com.example.ac13_pokedex.ui.components.TypeChip
 
 @Composable
 fun PokemonListScreen(
@@ -133,18 +139,49 @@ fun PokemonItem(
     Surface(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
-        color = mainColor,
+        color = MaterialTheme.colorScheme.surfaceContainer,
         onClick = onClick,
     ) {
         Row(
             Modifier.padding(start = 8.dp, end = 4.dp, top = 6.dp, bottom = 6.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(
-                pokemon.name,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-            )
+            Box(
+                Modifier.size(64.dp).clip(CircleShape).background(mainColor.copy(alpha = 0.22f)),
+                contentAlignment = Alignment.Center,
+            ) {
+                PokemonSprite(pokemon.sprite, contentDescription = null, modifier = Modifier.size(60.dp))
+            }
+            Spacer(Modifier.width(14.dp))
+            Column(Modifier.weight(1f)) {
+                Text(
+                    pokemon.number,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Text(
+                    pokemon.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                )
+                Spacer(Modifier.height(4.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    pokemon.types.mapNotNull { pokedex.getTypeByName(it) }.forEach { TypeChip(it) }
+                }
+            }
+            val description = if (captured) "Captured" else "Not captured"
+            Box(
+                Modifier
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    .clickable(onClickLabel = description, onClick = onToggleCaptured),
+                contentAlignment = Alignment.Center,
+            ) {
+                // PokeballIndicator(captured)
+                Box(Modifier.fillMaxSize().background(if (captured) Color.Red else Color.Black))
+
+            }
         }
     }
 }
+
