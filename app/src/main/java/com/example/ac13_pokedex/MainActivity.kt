@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.ac13_pokedex.data.PokedexProvider
 import com.example.ac13_pokedex.ui.theme.Ac13_pokedexTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,11 +20,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Ac13_pokedexTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                PokedexProvider {
+                    PokedexApp()
                 }
             }
         }
@@ -31,17 +29,6 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun PokedexApp() {
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Ac13_pokedexTheme {
-        Greeting("Android")
-    }
 }
