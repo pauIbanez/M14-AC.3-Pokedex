@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -53,8 +54,14 @@ fun PokedexApp() {
 
     var detailsId by rememberSaveable { mutableStateOf<Int?>(null) }
     val detailsPokemon = detailsId?.let { pokedex.byId(detailsId as Int) }
+    val listState = rememberLazyListState()
+
     if (detailsPokemon == null) {
-        PokemonListScreen()
+        PokemonListScreen(
+            listState = listState,
+            onOpen = { detailsId = it },
+            onToggleCaptured = { pokedex.toggleCaptured(it) },
+        )
     } else {
         PokemonDetailsScreen(
             pokemon = detailsPokemon,

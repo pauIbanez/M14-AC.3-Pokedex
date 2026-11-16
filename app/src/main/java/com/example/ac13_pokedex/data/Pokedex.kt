@@ -18,7 +18,7 @@ import kotlinx.serialization.json.Json
 
 
 @Serializable
-private data class PokedexFile(val pokemon: List<Pokemon>)
+private data class PokedexFile(val pokemon: List<Pokemon>, val types: List<PokemonType>)
 
 private val json = Json { ignoreUnknownKeys = true }
 

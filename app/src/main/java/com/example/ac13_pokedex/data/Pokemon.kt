@@ -1,6 +1,8 @@
 package com.example.ac13_pokedex.data
 
+import androidx.compose.ui.graphics.Color
 import kotlinx.serialization.Serializable
+import android.graphics.Color as AndroidColor
 
 @Serializable
 data class Stats(
@@ -21,6 +23,8 @@ data class PokemonType(
     val name: String,
     val color: String,
 )
+
+fun PokemonType.composeColor(): Color = Color(AndroidColor.parseColor(color))
 
 @Serializable
 data class Pokemon(
