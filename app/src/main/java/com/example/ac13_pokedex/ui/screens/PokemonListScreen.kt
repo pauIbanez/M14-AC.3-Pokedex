@@ -28,6 +28,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import com.example.ac13_pokedex.data.composeColor
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import com.example.ac13_pokedex.R
 
 @Composable
 fun PokemonListScreen(
@@ -42,6 +59,7 @@ fun PokemonListScreen(
 
     Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
 
+        Header()
         // Header
         LazyColumn(
             state = listState,
@@ -65,6 +83,40 @@ fun PokemonListScreen(
         }
     }
 }
+
+
+@Composable
+private fun Header() {
+    val focusManager = LocalFocusManager.current
+    val onPrimary = MaterialTheme.colorScheme.onPrimary
+    val pokedex = LocalPokedex.current
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(bottomStart = 28.dp, bottomEnd = 28.dp))
+            .background(MaterialTheme.colorScheme.primary)
+            .statusBarsPadding()
+            .padding(start = 20.dp, end = 20.dp, top = 12.dp, bottom = 20.dp),
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Spacer(Modifier.width(12.dp))
+            Text(
+                "Pokedex",
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Black,
+                color = onPrimary,
+            )
+            Spacer(Modifier.weight(1f))
+            Text(
+                "${pokedex.captured.size} / ${pokedex.store.size}",
+                style = MaterialTheme.typography.labelLarge,
+                color = onPrimary,
+            )
+        }
+        Spacer(Modifier.height(12.dp))
+    }
+}
+
 
 @Composable
 fun PokemonItem(
