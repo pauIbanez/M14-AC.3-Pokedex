@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -67,7 +68,7 @@ fun PokemonDetailsScreen(pokemon: Pokemon, onBack: () -> Unit) {
             .padding(bottom = navBar.calculateBottomPadding() + 24.dp),
     ) {
 
-        Hero(pokemon, types, mainColor, secondColor, onBack)
+        Header(pokemon, types, mainColor, secondColor, onBack)
 
 
     }
@@ -75,7 +76,7 @@ fun PokemonDetailsScreen(pokemon: Pokemon, onBack: () -> Unit) {
 }
 
 @Composable
-private fun Hero(
+private fun Header(
     pokemon: Pokemon,
     types: List<PokemonType>,
     mainColor: Color,
@@ -102,19 +103,8 @@ private fun Hero(
                 Icon(Icons.Back, "Back", tint = Color.White)
             }
             Spacer(Modifier.weight(1f))
-            // IconButton(onClick = { onPrevious?.invoke() }, enabled = onPrevious != null) {
-            //     Icon(
-            //         Icons.ChevronLeft, stringResource(R.string.previous),
-            //         tint = Color.White.copy(alpha = if (onPrevious != null) 1f else 0.3f),
-            //     )
-            // }
             Text(pokemon.number, color = Color.White, fontWeight = FontWeight.Bold)
-            // IconButton(onClick = { onNext?.invoke() }, enabled = onNext != null) {
-            //     Icon(
-            //         Icons.ChevronRight, stringResource(R.string.next),
-            //         tint = Color.White.copy(alpha = if (onNext != null) 1f else 0.3f),
-            //     )
-            // }
+            Spacer(Modifier.width(2.dp))
         }
 
         Box(contentAlignment = Alignment.Center) {
@@ -142,7 +132,7 @@ private fun Hero(
         if (pokemon.spriteFemale != null) {
             Spacer(Modifier.height(14.dp))
             Row(
-                Modifier.clip(CircleShape).background(Color.Black.copy(alpha = 0.18f)).padding(3.dp),
+                Modifier.clip(CircleShape).background(Color.Black.copy(alpha = 0.18f)).padding(10.dp, 3.dp),
             ) {
                 GenderOption("♂ Male", !showFemale) { showFemale = false }
                 GenderOption("♀ Female", showFemale) { showFemale = true }
