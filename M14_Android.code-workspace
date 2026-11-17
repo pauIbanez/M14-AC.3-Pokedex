@@ -1,7 +1,7 @@
 {
   "folders": [
     { "name": "Project", "path": "." },
-    { "name": "src", "path": "app/src/main/java/com/example/pokedex" },
+    { "name": "src", "path": "app/src/main/java/com/example/ac13_pokedex" },
     { "name": "Assets", "path": "app/src/main/assets" },
     { "name": "Drawables", "path": "app/src/main/res/drawable" },
   ],
