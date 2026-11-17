@@ -38,6 +38,7 @@ data class Pokemon(
     val stats: Stats,
     val description: String,
     val sprite: String,
+    val spriteFemale: String? = null,
 ) {
     val number: String get() = "#%03d".format(id)
 }

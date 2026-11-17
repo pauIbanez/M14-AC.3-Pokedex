@@ -22,9 +22,12 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.addPathNodes
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -101,4 +104,19 @@ fun PokeballIndicator(captured: Boolean, modifier: Modifier = Modifier, size: Dp
         drawCircle(ink, radius = r * 0.32f)
         drawCircle(Color.White, radius = r * 0.18f)
     }
+}
+
+private fun icon(name: String, path: String): ImageVector =
+    ImageVector.Builder(name, 24.dp, 24.dp, 24f, 24f)
+        .addPath(pathData = addPathNodes(path), fill = SolidColor(Color.Black))
+        .build()
+
+object Icons {
+    val Back = icon("back", "M20,11H7.83l5.59,-5.59L12,4l-8,8 8,8 1.41,-1.41L7.83,13H20v-2z")
+    val ChevronLeft = icon("prev", "M15.41,7.41L14,6l-6,6 6,6 1.41,-1.41L10.83,12z")
+    val ChevronRight = icon("next", "M10,6L8.59,7.41 13.17,12l-4.58,4.59L10,18l6,-6z")
+    val Close = icon(
+        "close",
+        "M19,6.41L17.59,5 12,10.59 6.41,5 5,6.41 10.59,12 5,17.59 6.41,19 12,13.41 17.59,19 19,17.59 13.41,12z",
+    )
 }

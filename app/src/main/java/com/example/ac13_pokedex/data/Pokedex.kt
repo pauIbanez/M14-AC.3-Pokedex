@@ -36,6 +36,7 @@ class Pokedex {
             json.decodeFromString<PokedexFile>(text)
         }
         store.addAll(data.pokemon)
+        pokemonTypes.addAll(data.types)
         isLoaded = true
     }
 
@@ -45,7 +46,7 @@ class Pokedex {
     }
 
     fun byId(id: Int): Pokemon? = store.find { it.id == id }
-    fun getTypeByName(name: String): PokemonType? = pokemonTypes.find { it.name == name }
+    fun getTypeByName(name: String): PokemonType? = pokemonTypes.find { it.id == name }
 
 }
 
@@ -58,7 +59,7 @@ fun PokedexProvider(content: @Composable () -> Unit) {
     val context = LocalContext.current
     val pokedex = remember { Pokedex() }
 
-    LaunchedEffect(pokedex) {               // like useEffect(() => {...}, [pokedex])
+    LaunchedEffect(pokedex) {
         pokedex.loadPokedex(context.applicationContext)
     }
 
