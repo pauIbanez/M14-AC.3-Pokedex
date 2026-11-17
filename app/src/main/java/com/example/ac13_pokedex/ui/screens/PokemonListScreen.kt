@@ -16,6 +16,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -53,6 +55,14 @@ import com.example.ac13_pokedex.Filters
 import com.example.ac13_pokedex.ui.components.PokemonSprite
 import com.example.ac13_pokedex.ui.components.TypeChip
 import com.example.ac13_pokedex.ui.components.PokeballIndicator
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
+import androidx.compose.runtime.setValue
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 
 
 @Composable
@@ -66,13 +76,22 @@ fun PokemonListScreen(
     val pokedex = LocalPokedex.current
     val navBar = WindowInsets.navigationBars.asPaddingValues()
 
-    val visible = remember(pokedex.store, pokedex.captured, filter) {
-        when {
-            filter == Filters.Captured -> pokedex.store.filter { pokemon -> pokemon.id in pokedex.captured }
-            filter == Filters.Missing -> pokedex.store.filter { pokemon -> pokemon.id !in pokedex.captured }
-            else -> pokedex.store
+    val keepAlive = remember(filter) { mutableStateListOf<Int>() }
+    val keepAliveTimers = remember { mutableMapOf<Int, Job>() }
+    val scope = rememberCoroutineScope()
+
+
+    val visible by remember(keepAlive, pokedex.store, filter) {
+        derivedStateOf {
+            when (filter) {
+                Filters.Captured -> pokedex.store.filter { pokemon -> pokemon.id in pokedex.captured || pokemon.id in keepAlive }
+                Filters.Missing -> pokedex.store.filter { pokemon -> pokemon.id !in pokedex.captured || pokemon.id in keepAlive }
+                else -> pokedex.store
+            }
         }
     }
+
+
 
     Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
         Header()
@@ -110,7 +129,16 @@ fun PokemonListScreen(
                     onClick = {
                         onOpen(it.id)
                     },
-                    onToggleCaptured = { onToggleCaptured(it.id) },
+                    onToggleCaptured = {
+                        onToggleCaptured(it.id)
+                        keepAliveTimers[it.id]?.cancel()
+                        keepAlive.add(it.id)
+                        keepAliveTimers[it.id] = scope.launch {
+                            delay(1000)
+                            keepAlive.remove(it.id)
+                            keepAliveTimers.remove(it.id)
+                        }
+                    },
                 )
             }
         }
