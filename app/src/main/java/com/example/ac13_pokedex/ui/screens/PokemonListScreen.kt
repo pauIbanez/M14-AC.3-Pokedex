@@ -46,27 +46,54 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import com.example.ac13_pokedex.R
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.FilterChip
+import com.example.ac13_pokedex.Filters
 import com.example.ac13_pokedex.ui.components.PokemonSprite
 import com.example.ac13_pokedex.ui.components.TypeChip
+import com.example.ac13_pokedex.ui.components.PokeballIndicator
+
 
 @Composable
 fun PokemonListScreen(
     listState: LazyListState,
     onOpen: (Int) -> Unit,
     onToggleCaptured: (Int) -> Unit,
+    filter: Filters,
+    onFilterChange: (Filters) -> Unit,
 ) {
     val pokedex = LocalPokedex.current
-    val pokemons: List<Pokemon> = remember(pokedex.store, pokedex.captured) { pokedex.store }
-
     val navBar = WindowInsets.navigationBars.asPaddingValues()
 
-    Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
+    val visible = remember(pokedex.store, pokedex.captured, filter) {
+        when {
+            filter == Filters.Captured -> pokedex.store.filter { pokemon -> pokemon.id in pokedex.captured }
+            filter == Filters.Missing -> pokedex.store.filter { pokemon -> pokemon.id !in pokedex.captured }
+            else -> pokedex.store
+        }
+    }
 
+    Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
         Header()
-        // Header
+        FilterRow(filter, onFilterChange)
+
+        val emptyText = mapOf(
+            Filters.All to "No pokemon loaded!",
+            Filters.Captured to "You haven't captured any pokemon!",
+            Filters.Missing to "You captured every pokemon!"
+        )
+
+        if (visible.isEmpty()) {
+            Box(Modifier.fillMaxSize().padding(32.dp), contentAlignment = Alignment.TopCenter) {
+                Text(
+                    emptyText[filter] as String,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+            return@Column
+        }
+
         LazyColumn(
             state = listState,
             contentPadding = PaddingValues(
@@ -76,7 +103,7 @@ fun PokemonListScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
 
-            items(pokemons, key = { it.id }) {
+            items(visible, key = { it.id }) {
                 PokemonItem(
                     pokemon = it,
                     captured = it.id in pokedex.captured,
@@ -123,6 +150,26 @@ private fun Header() {
     }
 }
 
+@Composable
+fun FilterRow(current: Filters, onFilterChange: (Filters) -> Unit) {
+    Row(
+        Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        val labels = mapOf(
+            Filters.All to "All",
+            Filters.Captured to "Captured",
+            Filters.Missing to "Missing"
+        )
+        labels.forEach { (value, label) ->
+            FilterChip(
+                selected = current == value,
+                onClick = { onFilterChange(value) },
+                label = { Text(label) },
+            )
+        }
+    }
+}
 
 @Composable
 fun PokemonItem(
@@ -177,9 +224,7 @@ fun PokemonItem(
                     .clickable(onClickLabel = description, onClick = onToggleCaptured),
                 contentAlignment = Alignment.Center,
             ) {
-                // PokeballIndicator(captured)
-                Box(Modifier.fillMaxSize().background(if (captured) Color.Red else Color.Black))
-
+                PokeballIndicator(captured)
             }
         }
     }

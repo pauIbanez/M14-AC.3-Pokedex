@@ -39,6 +39,13 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+enum class Filters {
+    All,
+    Captured,
+    Missing
+}
+
+
 @Composable
 fun PokedexApp() {
 
@@ -55,12 +62,15 @@ fun PokedexApp() {
     var detailsId by rememberSaveable { mutableStateOf<Int?>(null) }
     val detailsPokemon = detailsId?.let { pokedex.byId(detailsId as Int) }
     val listState = rememberLazyListState()
+    var filter by rememberSaveable { mutableStateOf(Filters.All) }
 
     if (detailsPokemon == null) {
         PokemonListScreen(
             listState = listState,
             onOpen = { detailsId = it },
             onToggleCaptured = { pokedex.toggleCaptured(it) },
+            filter = filter,
+            onFilterChange = { newFilter -> filter = newFilter }
         )
     } else {
         PokemonDetailsScreen(
